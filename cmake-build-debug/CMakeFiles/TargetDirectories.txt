@@ -1,0 +1,3 @@
+C:/Users/User/Desktop/c++/2.4 2.5/cmake-build-debug/CMakeFiles/2_4_2_5.dir
+C:/Users/User/Desktop/c++/2.4 2.5/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/User/Desktop/c++/2.4 2.5/cmake-build-debug/CMakeFiles/rebuild_cache.dir
