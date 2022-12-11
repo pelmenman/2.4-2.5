@@ -117,9 +117,9 @@ public:
                 Current->setRight(N);
             Current->getRight()->setParent(Current);
         }
-        if (Current->getData() == N->getData())
+        if (Current->getData() == N->getData());
 //нашли совпадение
-            ;
+
 //для несбалансированного дерева поиска
         return Current;
     }
@@ -211,8 +211,11 @@ public:
         N->setData(n);
         Add_R(N, Tree<T>:: root);
     }
+    virtual Node<T>* Find(T data) { return Tree<T>::Find(data, Tree<T>::root); }
 
 protected:
+    bool LEFT = true;
+    bool RIGHT = false;
 
      Node<T>* Add_R(Node<T>* nodeToAdd, Node<T>* Current) override {
 
@@ -223,13 +226,18 @@ protected:
             return nodeToAdd;
         }
 
-        if (Current->getData() == nodeToAdd->getData()) {
-            throw AlreadyUsed();
-        }
+//        if (Current->getData() == nodeToAdd->getData()) {
+//            throw AlreadyUsed();
+//        }
 
         (Current->getData() > nodeToAdd->getData()) ? goToTheLeft(nodeToAdd, Current) : goToTheRight(nodeToAdd, Current);
 
         balance(Current);
+        fixHeight(Current);
+
+        if (this->getRoot()->getParent() != NULL) {
+            Tree<T>:: root = this->getRoot()->getParent();
+        }
 
         return Current;
     }
@@ -252,27 +260,113 @@ protected:
         Current->getRight()->setParent(Current);
     }
 
-    Node<T>* balance(Node<T>* nodeToCheck) {
-        fixHeight(nodeToCheck);
-
+    void balance(Node<T>* nodeToCheck) {
         int h = heightDifference(nodeToCheck);
 
-        if (h > 1) {
-            if (heightDifference(nodeToCheck->getLeft()) < 0)
-                nodeToCheck->setLeft(turnLeft(nodeToCheck->getLeft()));
+        if (h < 2 && h > -2) return;
 
-            return turnRight(nodeToCheck);
-        }
-        else if (h < -1) {
+        if (h == 2) {
 
-            if (heightDifference(nodeToCheck->getRight()) > 0)
-                nodeToCheck->setRight(turnRight(nodeToCheck->getRight()));
 
-            return turnLeft(nodeToCheck);
         }
 
-        return nodeToCheck;
+//        if (h == -2) {
+//            int heightOfChild = heightDifference(nodeToCheck->getRight());
+//
+//            if (heightOfChild == 0) { turnLeft(nodeToCheck); }
+//            if (heightOfChild == -1) { turnLeft(nodeToCheck); }
+//            if (heightOfChild == 1) { bigLeft(nodeToCheck); }
+//        }
+//
+//        if (h == 2) {
+//            int heightOfChild = heightDifference(nodeToCheck->getLeft());
+//
+//            if (heightOfChild == 0) { turnRight(nodeToCheck); }
+//            if (heightOfChild == -1) { bigRight(nodeToCheck); }
+//            if (heightOfChild == 1) { turnRight(nodeToCheck); }
+//        }
+
+        bool whereNode;
+
+        if (nodeToCheck->getParent() != NULL) {
+            whereNode = (nodeToCheck == nodeToCheck->getParent()->getLeft()) ? LEFT : RIGHT;
+        }
+        else {
+            whereNode = true;
+        }
+
+        if (h == 2) {
+            int heightOfChild = heightDifference(nodeToCheck->getLeft());
+
+            if (heightOfChild == 0) balanceZero(nodeToCheck, LEFT, whereNode);
+
+            if (heightOfChild == -1) balancePlusOne(nodeToCheck, LEFT, whereNode);
+
+            if (heightOfChild == 1) balanceMinusOne(nodeToCheck, LEFT, whereNode);
+        }
+
+        if (h == -2) {
+            int heightOfChild = heightDifference(nodeToCheck->getRight());
+
+            if (heightOfChild == 0) balanceZero(nodeToCheck, RIGHT, whereNode);
+
+            if (heightOfChild == -1) balancePlusOne(nodeToCheck, RIGHT, whereNode);
+
+            if (heightOfChild == 1) balanceMinusOne(nodeToCheck, RIGHT, whereNode);
+        }
+
     }
+
+    void balanceZero(Node<T>* nodeIB, bool sideOfInbalance, bool whereNodeIB) {
+         Node<T>* parent = nodeIB->getParent();
+         Node<T>* leftChild = nodeIB->getLeft();
+         Node<T>* rightChild = nodeIB->getRight();
+
+         if (sideOfInbalance == LEFT) {
+             auto temp = rightChild;
+             rightChild = leftChild;
+             leftChild = temp;
+         }
+
+        movement(nodeIB, rightChild, sideOfInbalance, leftChild);
+
+        connectNodes(parent, rightChild, whereNodeIB);
+
+        rightChild->setHeight(rightChild->getHeight() + 1);
+        nodeIB->setHeight(nodeIB->getHeight() - 1);
+     }
+
+     void balanceMinusOne(Node<T>* nodeIB, bool sideOfInbalance, bool whereNodeIB) {
+         Node<T>* parent = nodeIB->getParent();
+         Node<T>* leftChild = nodeIB->getLeft();
+         Node<T>* rightChild = nodeIB->getRight();
+
+         if (sideOfInbalance == LEFT) {
+             auto temp = rightChild;
+             rightChild = leftChild;
+             leftChild = temp;
+         }
+
+         movement(nodeIB, rightChild, sideOfInbalance, leftChild);
+         connectNodes(parent, rightChild, whereNodeIB);
+         nodeIB->setHeight(nodeIB->getHeight() - 2);
+     }
+
+     void balancePlusOne(Node<T>* nodeIB, bool sideOfInbalance, bool whereNodeIB) {
+         Node<T>* parent = nodeIB->getParent();
+         Node<T>* leftChild = nodeIB->getLeft();
+         Node<T>* rightChild = nodeIB->getRight();
+
+         if (sideOfInbalance == LEFT) {
+             auto temp = rightChild;
+             rightChild = leftChild;
+             temp = leftChild;
+         }
+
+         balanceZero(rightChild, !sideOfInbalance, sideOfInbalance);
+         balanceMinusOne(nodeIB, sideOfInbalance, whereNodeIB);
+     }
+
 
     void fixHeight(Node<T>* n) {
         int leftHeight = height(n->getLeft());
@@ -285,33 +379,40 @@ protected:
     int height(Node<T>* node) { return (node)? node->getHeight() : 0; }
     void changeRoot(Node<T>* newRoot) { Tree<T>:: root = newRoot; }
 
-    Node<T>* turnRight(Node<T>* nodeRotateAround) {
+    void bigLeft(Node<T>* node) {
+        turnRight(node);
+        turnLeft(node->getParent());
+     }
+
+     void bigRight(Node<T>* node) {
+         turnLeft(node);
+         turnRight(node->getParent());
+     }
+
+    void turnRight(Node<T>* nodeRotateAround) {
         Node<T>* newNode = nodeRotateAround->getLeft();
         nodeRotateAround->setLeft(newNode->getRight());
+        nodeRotateAround->getLeft()->setParent(nodeRotateAround);
+
         newNode->setRight(nodeRotateAround);
-
-        if (Tree<T>::root == nodeRotateAround) { changeRoot( newNode); }
-
-        disconnectNodes(nodeRotateAround);
-        connectNodes(newNode, nodeRotateAround);
-
-        return newNode;
-    }
-
-    Node<T>* turnLeft(Node<T>* nodeRotateAround) {
-        Node<T>* newNode = nodeRotateAround->getRight();
-        nodeRotateAround->setRight(newNode->getLeft());
-        newNode->setLeft(nodeRotateAround);
-
         newNode->setParent(nodeRotateAround->getParent());
         nodeRotateAround->setParent(newNode);
 
-        if (Tree<T>::root == nodeRotateAround) { changeRoot( newNode);}
+        nodeRotateAround->setHeight(nodeRotateAround->getHeight() + 1);
+        newNode->setHeight(newNode->getHeight() - 1);
+    }
 
-        disconnectNodes(nodeRotateAround);
-        connectNodes(newNode, nodeRotateAround);
+    void turnLeft(Node<T>* nodeRotateAround) {
+        Node<T>* newNode = nodeRotateAround->getRight();
+        nodeRotateAround->setRight(newNode->getLeft());
+        nodeRotateAround->getRight()->setParent(nodeRotateAround);
 
-        return newNode;
+        newNode->setLeft(nodeRotateAround);
+        newNode->setParent(nodeRotateAround->getParent());
+        nodeRotateAround->setParent(newNode);
+
+        nodeRotateAround->setHeight(nodeRotateAround->getHeight() + 1);
+        newNode->setHeight(newNode->getHeight() - 1);
     }
 
     void disconnectNodes(Node<T>* node) {
@@ -339,14 +440,14 @@ protected:
         }
     }
 
-    void connectNodes(Node<T>* parent, Node<T>* child) {
+    void connectNodes(Node<T>* parent, Node<T>* child, bool side) {
         if (parent != NULL) {
-            if (child->getData() > parent->data) {
-                parent->setRight(child);
+            if (side == LEFT) {
+                parent->setLeft(child);
             }
 
-            if (child->getData() < parent->data) {
-                parent->setLeft(child);
+            if (side == RIGHT) {
+                parent->setRight(child);
             }
 
         }
@@ -355,6 +456,26 @@ protected:
             child->setParent(parent);
         }
     }
+
+    void movement(Node<T>* nodeIB, Node<T>* childOfInbalance, bool sideOfInbalance, Node<T>* brotherOfInbalance) {
+         Node<T>* leftChild = childOfInbalance->getLeft();
+         Node<T>* rightChild = childOfInbalance->getRight();
+
+        disconnectNodes(childOfInbalance);
+        disconnectNodes(nodeIB);
+
+        connectNodes(nodeIB, brotherOfInbalance, !sideOfInbalance);
+
+        if (sideOfInbalance == LEFT) {
+            connectNodes(nodeIB, rightChild, sideOfInbalance);
+        }
+        else {
+            connectNodes(nodeIB, leftChild, sideOfInbalance);
+        }
+
+        connectNodes(childOfInbalance, nodeIB, !sideOfInbalance);
+     }
+
 };
 
 
@@ -394,13 +515,12 @@ int main()
 //    T.InOrder(T.getRoot(), f_ptr);
 //    char c; cin >> c;
 
-    BalancedTree<double> T;
-    T.Add(2.5);
-    T.Add(2.6);
-    T.Add(2.7);
-    T.Add(2.2);
-    cout << "Root: " << *T.getRoot() << endl;
-    //cout << "Min: " << *T.Min(T.getRoot()) << endl;
-    //cout << "Max: " << *T.Max(T.getRoot());
+    BalancedTree<int> T = BalancedTree<int> ();
+
+    for (int i = 0; i < 6; i++) {
+        T.Add(i);
+    }
+
+    cout << T.getRoot()->getData();
     return 0;
 }
