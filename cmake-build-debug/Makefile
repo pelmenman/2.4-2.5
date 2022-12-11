@@ -128,6 +128,30 @@ depend:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/build
 .PHONY : 2_4_2_5/fast
 
+Iterator.obj: Iterator.cpp.obj
+.PHONY : Iterator.obj
+
+# target to build an object file
+Iterator.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/Iterator.cpp.obj
+.PHONY : Iterator.cpp.obj
+
+Iterator.i: Iterator.cpp.i
+.PHONY : Iterator.i
+
+# target to preprocess a source file
+Iterator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/Iterator.cpp.i
+.PHONY : Iterator.cpp.i
+
+Iterator.s: Iterator.cpp.s
+.PHONY : Iterator.s
+
+# target to generate assembly for a file
+Iterator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/Iterator.cpp.s
+.PHONY : Iterator.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -161,6 +185,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... 2_4_2_5
+	@echo ... Iterator.obj
+	@echo ... Iterator.i
+	@echo ... Iterator.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

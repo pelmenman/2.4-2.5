@@ -2,6 +2,8 @@ file(REMOVE_RECURSE
   "2_4_2_5.exe"
   "2_4_2_5.exe.manifest"
   "2_4_2_5.pdb"
+  "CMakeFiles/2_4_2_5.dir/Iterator.cpp.obj"
+  "CMakeFiles/2_4_2_5.dir/Iterator.cpp.obj.d"
   "CMakeFiles/2_4_2_5.dir/main.cpp.obj"
   "CMakeFiles/2_4_2_5.dir/main.cpp.obj.d"
   "lib2_4_2_5.dll.a"

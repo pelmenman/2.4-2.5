@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/User/Desktop/c++/2.4 2.5/Iterator.cpp" "CMakeFiles/2_4_2_5.dir/Iterator.cpp.obj" "gcc" "CMakeFiles/2_4_2_5.dir/Iterator.cpp.obj.d"
   "C:/Users/User/Desktop/c++/2.4 2.5/main.cpp" "CMakeFiles/2_4_2_5.dir/main.cpp.obj" "gcc" "CMakeFiles/2_4_2_5.dir/main.cpp.obj.d"
   )
 

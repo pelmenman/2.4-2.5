@@ -80,12 +80,12 @@ clean: CMakeFiles/2_4_2_5.dir/clean
 CMakeFiles/2_4_2_5.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\2_4_2_5.dir\build.make CMakeFiles/2_4_2_5.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="C:\Users\User\Desktop\c++\2.4 2.5\cmake-build-debug\CMakeFiles" --progress-num=1,2 "Built target 2_4_2_5"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="C:\Users\User\Desktop\c++\2.4 2.5\cmake-build-debug\CMakeFiles" --progress-num=1,2,3 "Built target 2_4_2_5"
 .PHONY : CMakeFiles/2_4_2_5.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/2_4_2_5.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\User\Desktop\c++\2.4 2.5\cmake-build-debug\CMakeFiles" 2
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\User\Desktop\c++\2.4 2.5\cmake-build-debug\CMakeFiles" 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/2_4_2_5.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\User\Desktop\c++\2.4 2.5\cmake-build-debug\CMakeFiles" 0
 .PHONY : CMakeFiles/2_4_2_5.dir/rule
